@@ -216,7 +216,26 @@ $(function(){
 		
 		app.joinRoom(roomIdx, posIdx);
 	});
-
+	
+	//Send Msg
+	$("#msg-button").click(function(){
+		var msg = $("#msg-input").val();
+		if(msg == ""){
+			return ;
+		}
+		app.sendAllMsg(msg);
+		$("#msg-input").val('');
+	});
+	
+	//Send Msg to Room
+	$("#room-msg-button").click(function(){
+		var msg = $("#room-msg-input").val();
+		if(!msg){
+			return ;
+		}
+		app.sendRoomMsg(msg);
+		$("#room-msg-input").val("");
+	});
 	
 	//Change tag
 	$("#tag a").click(function(){
@@ -234,6 +253,21 @@ $(function(){
 		return false;
 	});
 	
+	//Drop Chess
+	$("div.room_chess").click(function(ev){
+		var pageX = ev.pageX;
+		var pageY = ev.pageY;
+		var x = parseInt((pageX - $(this).offset().left - 5) / 35);
+		var y = parseInt((pageY - $(this).offset().top - 5) / 35);
+
+		if(g_Info.roomIdx == -1 || g_Info.status != STAT_START || 
+			$("#chess-" + x + '-' + y).length > 0 || g_Info.allowDraw == false)
+		{
+			return;
+		}
+		
+		app.drawChess(g_Info.color, x, y);
+	});
 	
 	//Ready
 	$("#game_ready").click(function(){
@@ -252,4 +286,103 @@ $(function(){
 		app.leaveRoom(g_Info.roomIdx);
 	});
 	
+	//Change tag
+	function changeTag(tag)
+	{
+		if(tag == "room_list"){
+			$("#room_list").show();
+			$("#tag_room_list").addClass("on");
+			$("#room").hide();
+			$("#tag_room").removeClass("on");
+		}else{
+			$("#room").show();
+			$("#tag_room").addClass("on");	
+			$("#room_list").hide();
+			$("#tag_room_list").removeClass("on");	
+		}
+	}
+	
+	//Render User html
+	function makeHtmlUserList(data)
+	{
+		var stat = (data.status == STAT_READY ? "Ready" : (data.status == STAT_START ? "Gaming" : "Waiting"));
+		var html = ('<li id="user-' + data.id + '"><span>' + stat + "</span>" + data.nickname + "</li>");
+		return html;
+	}
+	
+	//Render User List
+	function initUserList(data)
+	{
+		var html = '';
+		for(var i = 0; i < data.length; i++){
+			html+= makeHtmlUserList(data[i]);
+		}
+		$("#list-box").html(html);	
+	}
+	
+	//Render Room list
+	function initRoomList(data)
+	{
+		var html = '';
+		for(var idx in data){
+			html+= '<div id="room-' + idx + '" value="' + idx + '" class="room_item">';
+			html+= '<div id="room-' + idx + '-name-1" class="player2">' + (data[idx][1] ? data[idx][1].nickname : "") + '</div>';
+			html+= '<div class="players">';
+			html+= '<div value="0" id="room-' + idx + '-icon-0" class="player icon1 ' + (data[idx][0] ? "yes" : "no") + '"></div>';
+			html+= '<div value="1" id="room-' + idx + '-icon-1" class="player icon2 ' + (data[idx][1] ? "yes" : "no") + '"></div>';
+			html+= '</div>';
+			html+= '<div id="room-' + idx + '-name-0" class="player1">' + (data[idx][0] ? data[idx][0].nickname : "") + '</div>';
+			html+= '<div class="roomnum">- ' + (parseInt(idx) + 1) + ' -</div>';
+			html+= '</div>';
+		}
+		$("#room-box").html(html);	
+	}
+	
+	//Render Room
+	function initRoom(player1, player2)
+	{
+		//Clera Msg & Chess
+		$("div.room_chess div").remove();
+		$("#room-msg-content p").remove();	
+		
+		//tag change
+		changeTag("room");
+		
+		//玩家1
+		if(player1){
+			updateRoom(0, player1);
+		}else{
+			removeRoom(0);
+		}
+		
+		//Plyaer2
+		if(player2){
+			updateRoom(1, player2);
+		}else{
+			removeRoom(1);
+		}
+	}
+	
+	//Update Room Members
+	function updateRoom(posIdx, player)
+	{
+		var p = (posIdx == 0 ? 1 : 2);
+		var s = (player.status == STAT_NORMAL ? "NotReady" : (player.status == STAT_READY ? "Ready" : "Gaming"));
+		$("#room-p" + p + "-nickname").html(player.nickname);
+		$("#room-p" + p + "-status").html(s);
+		$("#room-p" + p + "-img").html('<img src="yes_player.gif">');
+		if(g_Info.id == player.id){
+			var b = (player.status == STAT_NORMAL ? "Ready" : (player.status == STAT_READY ? "Exit" : "Gaming..."));
+			$("#game_ready").val(b);
+		}
+	}
+	
+	//Move Member from room
+	function removeRoom(posIdx)
+	{
+		var p = (posIdx == 0 ? 1 : 2);
+		$("#room-p" + p + "-nickname").html('&nbsp;');
+		$("#room-p" + p + "-status").html("&nbsp;");
+		$("#room-p" + p + "-img").html('<img src="no_player.gif">');	
+	}
 });
