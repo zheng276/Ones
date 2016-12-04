@@ -1,5 +1,5 @@
-﻿var module = require("./five");
-var app = new module.FiveChess();
+﻿var module = require("./trichess");
+var app = new module.TriChess();
 app.SetConfig({
 	"ListenPort" : 8080,
 	"RoomTotal" : 100,
