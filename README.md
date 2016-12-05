@@ -1,6 +1,6 @@
 Trichess
 
-An Online Multiplyaer Chess(Five Chess) Game which allows multiple users play in multiple room. 
+An Online Multiplyaer Chess(Five Chess) Game which allows multiple users play in multiple rooms. 
  - Enter user nickname to create a user
  - Click any empty spot to join the room on 'Lobby'
  - Feel free to communicate/announce any friend to join with you at 'Lobby Chat Room'
