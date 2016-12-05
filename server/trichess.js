@@ -254,6 +254,7 @@
 				m_Connections[m_Rooms[roomIdx][0]].status == STAT_READY &&
 				m_Connections[m_Rooms[roomIdx][1]].status == STAT_READY)
 			{
+				ResetCheseData(roomIdx);
 				m_Connections[m_Rooms[roomIdx][0]].status = STAT_START;
 				m_Connections[m_Rooms[roomIdx][1]].status = STAT_START;
 				m_Connections[m_Rooms[roomIdx][0]].socket.emit("start", {
@@ -347,6 +348,7 @@
 			}
 			if(n >= 5) return true;
 		}
+		
 		//Diagonse
 		n = 0;
 		var min = x < y ? (x - 4 < 0 ? x : 4) : (y - 4 < 0 ? y : 4);
@@ -384,8 +386,7 @@
 		}
 		
 		return false;
-		
-	}	
+	}
 
 	var OnMessage = function (data) {
 		var sid = this.id;
@@ -422,5 +423,4 @@
 				break;
 		}
 	}
-	
 }
