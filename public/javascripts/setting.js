@@ -33,7 +33,7 @@ function TriChess(host, port)
 			setError("io not defined");
 			return false;
 		}
-		socket = io.connect('http://' + m_Host + ':' + m_Port);
+		socket = io();
 		
 		/*if(socket.socket.open == false){
 			setError("connect http://" + m_Host + ":" + m_Port + " failed");

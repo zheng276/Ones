@@ -3,15 +3,15 @@ $(function(){
 	var MSG_TO   = 1;//Send to One
 	var MSG_ROOM = 2;//Send to Table
 	
-	var STAT_NORMAL = 0;//NotReady
-	var STAT_READY  = 1;//Ready
+	var STAT_NORMAL = 0;//Not
+	var STAT_READY  = 1;//
 	var STAT_START  = 2;//In Game
-	
+
 	var COLOR_BLACK = 1;//Black
 	var COLOR_WHITE = 2;//White
-	
+
 	var g_Connected = false;
-	var g_Host = "10.186.1.67";
+	var g_Host = "10.186.103.97";
 	var g_Port = 8080;
 	var g_Info = {
 		"id" : 0,
@@ -22,7 +22,7 @@ $(function(){
 	};
 	var app = new TriChess(g_Host, g_Port);
 	var defaultNickname = "Please Enter Your Name";
-	
+
 	app.on("login", function(data){//Login Return
 		if(data.ret == 1){
 			$("#dlgBg").remove();
@@ -37,7 +37,7 @@ $(function(){
 		}
 	}).on("close", function(data){//Exit program
 		$("#user-" + data.id).remove();
-		
+
 		//Exit Room
 		if(data.roomIdx == g_Info.roomIdx){
 			removeRoom(data.posIdx);
@@ -46,7 +46,7 @@ $(function(){
 				updateRoom(g_Info.posIdx, g_Info);
 			}
 		}
-		
+
 		//Exit Lobby
 		if(data.roomIdx != -1){
 			var name = $('#room-' + data.roomIdx + '-name-' + data.posIdx);
@@ -63,7 +63,7 @@ $(function(){
 		var icon = $('#room-' + data.roomIdx + '-icon-' + data.posIdx);
 		name.html(data.nickname);
 		icon.removeClass('no').addClass('yes');
-		
+
 		//Self
 		if(data.id == g_Info.id){
 			g_Info.roomIdx = data.roomIdx;
@@ -74,13 +74,13 @@ $(function(){
 			data.status = STAT_NORMAL;
 			updateRoom(data.posIdx, data);
 		}
-	}).on("ready", function(data){//Ready
-		//Ready in room
+	}).on("ready", function(data){//
+		// in room
 		if(data.roomIdx == g_Info.roomIdx){
 			updateRoom(data.posIdx, data);
 		}
-		//Ready in lobby
-		var stat = (data.status == STAT_NORMAL ? 
+		// in lobby
+		var stat = (data.status == STAT_NORMAL ?
 					"Waiting" : (data.status == STAT_READY ? "Ready" : "Gaming"));
 		$("#user-" + data.id + " span").html(stat);
 	}).on("roomInfo", function(data){//Room Info
@@ -108,7 +108,7 @@ $(function(){
 		if(data.roomIdx == g_Info.roomIdx){
 			//更新房间另一个成员的状态
 			var p = (data.player1 == g_Info.id ? 2 : 1);
-			$("#room-p" + p + "-status").html("Not Ready");
+			$("#room-p" + p + "-status").html("GET READY");
 		}
 	}).on("leaveRoom", function(data){//离开房间
 		var name = $('#room-' + data.roomIdx + '-name-' + data.posIdx);
@@ -151,7 +151,7 @@ $(function(){
 		}else{
 			g_Info.allowDraw = true;
 			$("div.room_chess").css("cursor", "pointer");
-		}	
+		}
 	}).on("winer", function(data){//胜利
 		g_Info.status = STAT_NORMAL;
 		g_Info.allowDraw = false;
@@ -163,7 +163,7 @@ $(function(){
 		updateRoom(g_Info.posIdx, g_Info);
 		alert("You Lost :( It's Okay, your life gets more diffcult");
 	});
-	
+
 	//昵称输入框事件
 	$('#nickname').click(function(){
 		$(this).val('');
@@ -172,7 +172,7 @@ $(function(){
 			$(this).val(defaultNickname);
 		}
 	}).val(defaultNickname);
-	
+
 	//登陆
 	$("#loginBtn").click(function(){
 		//链接服务器
@@ -180,7 +180,7 @@ $(function(){
 			alert("error: " + app.getError());
 			return false;
 		}
-		
+
 		//登陆
 		var nickname = $("#nickname").val();
 		if(!nickname || nickname == defaultNickname){
@@ -190,7 +190,7 @@ $(function(){
 		}
 		app.login(nickname);
 	});
-	
+
 	//加入房间
 	$("#room-box .player").live("click", function(){
 		var roomIdx = $(this).closest('.room_item').attr('value');
@@ -198,15 +198,15 @@ $(function(){
 		if($("#room-" + roomIdx + "-icon-" + posIdx).hasClass("yes")){
 			return ;
 		}
-		
+
 		if(g_Info.status == STAT_START){
 			alert("You can't join another room during the game!");
 			return ;
 		}
-		
+
 		app.joinRoom(roomIdx, posIdx);
 	});
-	
+
 	//发送消息
 	$("#msg-button").click(function(){
 		var msg = $("#msg-input").val();
@@ -216,7 +216,7 @@ $(function(){
 		app.sendAllMsg(msg);
 		$("#msg-input").val('');
 	});
-	
+
 	//发送消息到房间内
 	$("#msg").submit(function(){
 		var msg = $("#room-msg-input").val();
@@ -234,23 +234,23 @@ $(function(){
 		app.sendRoomMsg(msg);
 		$("#room-msg-input").val("");
 	});
-	
+
 	//切换窗口
 	$("#tag a").click(function(){
 		var id = $(this).attr('href').substr(1);
 		if($(this).hasClass('on')){
 			return false;
 		}
-		
+
 		if(g_Info.roomIdx == -1){
 			alert("You haven't join a room");
 			return false;
 		}
-		
+
 		changeTag(id);
 		return false;
 	});
-	
+
 	//落子
 	$("div.room_chess").click(function(ev){
 		var pageX = ev.pageX;
@@ -258,15 +258,15 @@ $(function(){
 		var x = parseInt((pageX - $(this).offset().left - 5) / 35);
 		var y = parseInt((pageY - $(this).offset().top - 5) / 35);
 
-		if(g_Info.roomIdx == -1 || g_Info.status != STAT_START || 
+		if(g_Info.roomIdx == -1 || g_Info.status != STAT_START ||
 			$("#chess-" + x + '-' + y).length > 0 || g_Info.allowDraw == false)
 		{
 			return;
 		}
-		
+
 		app.drawChess(g_Info.color, x, y);
 	});
-	
+
 	//准备
 	$("#game_ready").click(function(){
 		if(g_Info.status == STAT_START){
@@ -274,7 +274,7 @@ $(function(){
 		}
 		app.ready();
 	});
-	
+
 	//退出房间
 	$("#game_leave").click(function(){
 		if(g_Info.status == STAT_START){
@@ -283,7 +283,7 @@ $(function(){
 		}
 		app.leaveRoom(g_Info.roomIdx);
 	});
-	
+
 	//切换
 	function changeTag(tag)
 	{
@@ -294,20 +294,20 @@ $(function(){
 			$("#tag_room").removeClass("on");
 		}else{
 			$("#room").show();
-			$("#tag_room").addClass("on");	
+			$("#tag_room").addClass("on");
 			$("#room_list").hide();
-			$("#tag_room_list").removeClass("on");	
+			$("#tag_room_list").removeClass("on");
 		}
 	}
-	
+
 	//生成用户html
 	function makeHtmlUserList(data)
 	{
-		var stat = (data.status == STAT_READY ? "Ready" : (data.status == STAT_START ? "Gaming" : "Waiting"));
+		var stat = (data.status == STAT_READY ? "READY" : (data.status == STAT_START ? "Gaming" : "Waiting"));
 		var html = ('<li id="user-' + data.id + '"><span>' + stat + "</span>" + data.nickname + "</li>");
 		return html;
 	}
-	
+
 	//初始化用户列表
 	function initUserList(data)
 	{
@@ -315,9 +315,9 @@ $(function(){
 		for(var i = 0; i < data.length; i++){
 			html+= makeHtmlUserList(data[i]);
 		}
-		$("#list-box").html(html);	
+		$("#list-box").html(html);
 	}
-	
+
 	//初始化房间列表
 	function initRoomList(data)
 	{
@@ -333,26 +333,26 @@ $(function(){
 			html+= '<div class="roomnum">- ' + (parseInt(idx) + 1) + ' -</div>';
 			html+= '</div>';
 		}
-		$("#room-box").html(html);	
+		$("#room-box").html(html);
 	}
-	
+
 	//初始化房间
 	function initRoom(player1, player2)
 	{
 		//清除消息和棋子
 		$("div.room_chess div").remove();
-		$("#room-msg-content p").remove();	
-		
+		$("#room-msg-content p").remove();
+
 		//tag样式切换
 		changeTag("room");
-		
+
 		//玩家1
 		if(player1){
 			updateRoom(0, player1);
 		}else{
 			removeRoom(0);
 		}
-		
+
 		//玩家2
 		if(player2){
 			updateRoom(1, player2);
@@ -360,12 +360,12 @@ $(function(){
 			removeRoom(1);
 		}
 	}
-	
+
 	//更新房间人员
 	function updateRoom(posIdx, player)
 	{
 		var p = (posIdx == 0 ? 1 : 2);
-		var s = (player.status == STAT_NORMAL ? "NotReady" : (player.status == STAT_READY ? "Ready" : "Gaming"));
+		var s = (player.status == STAT_NORMAL ? "GET READY" : (player.status == STAT_READY ? "READY" : "Gaming"));
 		$("#room-p" + p + "-nickname").html(player.nickname);
 		$("#room-p" + p + "-status").html(s);
 		$("#room-p" + p + "-img").html('<img src="../images/farmer.png" style="width:133px;height:133px;">');
