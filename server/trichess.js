@@ -318,5 +318,37 @@
 		return true;
 	}
 	
+	var checkGameOver = function(roomIdx, x, y){
+		var n;
+		var cur = m_RoomData[roomIdx][x][y];
+		
+		//ROW
+		n = 0;
+		var startX = (x - 4) < 0 ? 0 : x - 4;
+		var endX   = (x + 4) > 14 ? 14 : x + 4;		
+		for(var i = startX; i <= endX; i++){
+			if(m_RoomData[roomIdx][i][y] == cur){
+				n++;
+			}else{
+				n = 0;
+			}
+			if(n >= 5) return true;
+		}
+		
+		//COLUMN
+		n = 0;
+		var startY = (y - 4) < 0 ? 0 : x - 4;
+		var endY   = (y + 4) > 14 ? 14 : y + 4;		
+		for(var i = startY; i <= endY; i++){
+			if(m_RoomData[roomIdx][x][i] == cur){
+				n++;
+			}else{
+				n = 0;
+			}
+			if(n >= 5) return true;
+		}
+		
+		
+	}	
 	
 }
