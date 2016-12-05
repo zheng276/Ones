@@ -386,5 +386,33 @@
 		return false;
 		
 	}	
+
+	var OnMessage = function (data) {
+		var sid = this.id;
+		if(!m_Connections[sid]) return;
+		
+		var cli = m_Connections[sid];
+		var msg = {
+			type : data.type,
+			id : cli.socket.id,
+			nickname : cli.nickname,
+			body : data.body
+		};
+		switch(data.type){
+			case MSG_ALL:
+				if(data.body){
+					io.sockets.emit("message", msg);
+				}
+				break;
+			case MSG_TO:
+				if(data.to && data.body){
+					m_Connections[data.to].socket.emit("message", msg);
+				}
+				break;
+			
+			default:
+				break;
+		}
+	}
 	
 }
