@@ -5,7 +5,7 @@
 	var MSG_ROOM = 2;
 	
 	var STAT_NORMAL = 0;
-	var STAT_READY  = 1;
+	//var STAT_READY  = 1;
 	var STAT_START  = 2;
 	
 	var COLOR_BLACK = 1;
