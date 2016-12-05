@@ -409,7 +409,15 @@
 					m_Connections[data.to].socket.emit("message", msg);
 				}
 				break;
-			
+			case MSG_ROOM:
+				if(cli.roomIdx > -1 && cli.roomIdx < m_Config.RoomTotal && data.body){
+					for(var i = 0; i < 2; i++){
+						if(m_Rooms[cli.roomIdx][i]){
+							m_Connections[m_Rooms[cli.roomIdx][i]].socket.emit("message", msg);
+						}
+					}
+				}
+				break;
 			default:
 				break;
 		}
