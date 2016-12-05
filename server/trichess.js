@@ -336,7 +336,7 @@
 		}
 		
 		//COLUMN
-		//n = 0;
+		n = 0;
 		var startY = (y - 4) < 0 ? 0 : x - 4;
 		var endY   = (y + 4) > 14 ? 14 : y + 4;		
 		for(var i = startY; i <= endY; i++){
