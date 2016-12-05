@@ -18,10 +18,12 @@ body{background:#AED9E0;margin-top:calc((100vh - 650px) / 2);}
 	filter:alpha(opacity=50);-moz-opacity:0.5;-khtml-opacity: 0.5;opacity: 0.5;}
 
 /*Lobby*/
-.room_all{background:#FAE6CB;display:inline-block;}
-.tag{height:30px;}
+.room_all{background:#FAE6CB;display:inline-block;margin-top: -5px;}
+.tag{height:30px;display: inline-block;}
 .tag a{float:left;height:30px;line-height:30px;text-align:center;width:110px;background:#D9D3BF}
 .tag a.on{background:#FAE6CB}
+.mbox{background: #FFFFFF;display: inline-block;width:275px;height:30px;float: right;}
+#message-box-content{line-height: 30px;text-align: center;color: rgb(233,0,0);}
 .room_left{width:720px;float:left;}
 .room_right{width:280px;float:left}
 .room_list{height:600px;margin:5px 0 5px 5px;overflow-y:scroll;}
@@ -37,7 +39,7 @@ body{background:#AED9E0;margin-top:calc((100vh - 650px) / 2);}
 .room_item .roomnum{text-align:center}
 
 /*Room*/
-.room{background:#FAE6CB;display:inline-block}
+.room{background:#FAE6CB;display:inline-block;margin-top: -5px;}
 .room_user{margin:5px;width:190px;height:535px;float:left;background:#FAE6CB;text-align:center}
 .room_user p{line-height:22px}
 .room_user .u1{margin-top:65px;}

@@ -27,6 +27,7 @@ $(function(){
 		if(data.ret == 1){
 			$("#dlgBg").remove();
 			$("#login").remove();
+			$('#message-box-content').html("Welcome to TriChess™");
 			g_Info.id       = data.info.id;
 			g_Info.nickname = data.info.nickname;
 			g_Info.status   = data.info.status;
@@ -96,7 +97,8 @@ $(function(){
 		}
 		$("div.room_chess div").remove();//Clear chess
 		$("#game_ready").val("Gaming...");
-		alert("Game Started");
+		$("#for-audio").html("<audio src=\"audios/start.mp3\" type=\"type/mpeg\" autoplay></audio>");
+		$('#message-box-content').html("Game Started");
 	}).on("startInfo", function(data){//有游戏开始了
 		$("#room-" + data.roomIdx).addClass("room_item_start");
 		$("#user-" + data.player1 + " span").html("Gaming");
@@ -123,7 +125,7 @@ $(function(){
 			removeRoom(data.posIdx);
 		}
 	}).on("joinRoomError", function(data){//加入房间失败
-		alert("Fail to Join Room");
+		$('#message-box-content').html("Fail to Join Room");
 	}).on("message", function(data){//接受消息
 		if(data.type == MSG_ALL){
 			$("#msg-content").append("<p>" + data.nickname + ": " + data.body + "</p>");
@@ -156,12 +158,13 @@ $(function(){
 		g_Info.status = STAT_NORMAL;
 		g_Info.allowDraw = false;
 		updateRoom(g_Info.posIdx, g_Info);
-		alert("You Win! Boiler Up!");
+		$('#message-box-content').html("You Win! Boiler Up!");
 	}).on("loser", function(data){//失败
 		g_Info.status = STAT_NORMAL;
 		g_Info.allowDraw = false;
 		updateRoom(g_Info.posIdx, g_Info);
-		alert("You Lost :( It's Okay, your life gets more diffcult");
+		$("#for-audio").html("<audio src=\"audios/loser.mp3\" type=\"type/mpeg\" autoplay></audio>");
+		$('#message-box-content').html("You Lost. _(:з」∠)_ ");
 	});
 
 	//昵称输入框事件
@@ -177,7 +180,7 @@ $(function(){
 	$("#loginBtn").click(function(){
 		//链接服务器
 		if(app.connect() == false){
-			alert("error: " + app.getError());
+			$('#message-box-content').html("error: " + app.getError());
 			return false;
 		}
 
@@ -200,7 +203,7 @@ $(function(){
 		}
 
 		if(g_Info.status == STAT_START){
-			alert("You can't join another room during the game!");
+			$('#message-box-content').html("You can't join another room during the game!");
 			return ;
 		}
 
@@ -243,7 +246,8 @@ $(function(){
 		}
 
 		if(g_Info.roomIdx == -1){
-			alert("You haven't join a room");
+			$('#message-box-content').html("You haven't join a room");
+			$('#message-box-content').shake();
 			return false;
 		}
 
@@ -278,7 +282,7 @@ $(function(){
 	//退出房间
 	$("#game_leave").click(function(){
 		if(g_Info.status == STAT_START){
-			alert("Don't escape from the game!");
+			$('#message-box-content').html("Don't escape from the game!");
 			return ;
 		}
 		app.leaveRoom(g_Info.roomIdx);
@@ -330,7 +334,7 @@ $(function(){
 			html+= '<div value="1" id="room-' + idx + '-icon-1" class="player icon2 ' + (data[idx][1] ? "yes" : "no") + '"></div>';
 			html+= '</div>';
 			html+= '<div id="room-' + idx + '-name-0" class="player1">' + (data[idx][0] ? data[idx][0].nickname : "") + '</div>';
-			html+= '<div class="roomnum">- ' + (parseInt(idx) + 1) + ' -</div>';
+			html+= '<div class="roomnum">- - ' + (parseInt(idx) + 1) + ' - -</div>';
 			html+= '</div>';
 		}
 		$("#room-box").html(html);
