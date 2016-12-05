@@ -364,7 +364,26 @@
 			if(n >= 5) return true;
 		}
 		
-
+		//Opposite Diagonse
+		n = 0;
+		var min = (x + 4 > 14 ? 14 - x : 4) < (y - 4 < 0 ? y : 4) ? 
+				  (x + 4 > 14 ? 14 - x : 4) : (y - 4 < 0 ? y : 4);
+		var max = (x - 4 < 0 ? x : 4) < (y + 4 > 14 ? 14 - y : 4) ?
+				  (x - 4 < 0 ? x : 4) : (y + 4 > 14 ? 14 - y : 4);
+		var p1x = x + min;
+		var p1y = y - min;
+		var p2x = x - max;
+		var p2y = y + max;
+		for(var i = p1x, j = p1y; i >= p2x; i--, j++){
+			if(m_RoomData[roomIdx][i][j] == cur){
+				n++;
+			}else{
+				n = 0;
+			}
+			if(n >= 5) return true;
+		}
+		
+		return false;
 		
 	}	
 	
