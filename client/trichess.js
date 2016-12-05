@@ -11,7 +11,7 @@ $(function(){
 	var COLOR_WHITE = 2;//White
 	
 	var g_Connected = false;
-	var g_Host = "127.0.0.1";
+	var g_Host = "10.186.1.67";
 	var g_Port = 8080;
 	var g_Info = {
 		"id" : 0,
@@ -97,34 +97,34 @@ $(function(){
 		$("div.room_chess div").remove();//Clear chess
 		$("#game_ready").val("Gaming...");
 		alert("Game Started");
-	}).on("startInfo", function(data){//Game Start
+	}).on("startInfo", function(data){//有游戏开始了
 		$("#room-" + data.roomIdx).addClass("room_item_start");
 		$("#user-" + data.player1 + " span").html("Gaming");
 		$("#user-" + data.player2 + " span").html("Gaming");
-	}).on("overInfo", function(data){//Game End
+	}).on("overInfo", function(data){//游戏结束了
 		$("#room-" + data.roomIdx).removeClass("room_item_start");
 		$("#user-" + data.player1 + " span").html("Waiting");
 		$("#user-" + data.player2 + " span").html("Waiting");
 		if(data.roomIdx == g_Info.roomIdx){
-			//Update Status for players
+			//更新房间另一个成员的状态
 			var p = (data.player1 == g_Info.id ? 2 : 1);
-			$("#room-p" + p + "-status").html("Not Ready");
+			$("#room-p" + p + "-status").html("GET READY");
 		}
-	}).on("leaveRoom", function(data){//Leave Room
+	}).on("leaveRoom", function(data){//离开房间
 		var name = $('#room-' + data.roomIdx + '-name-' + data.posIdx);
 		var icon = $('#room-' + data.roomIdx + '-icon-' + data.posIdx);
 		name.html('');
 		icon.removeClass('yes').addClass('no');
-		if(data.id == g_Info.id){//Update User Info
+		if(data.id == g_Info.id){//更新自己的信息
 			g_Info.roomIdx = -1;
 			g_Info.posIdx  = -1;
 			changeTag("room_list");
-		}else if(data.roomIdx == g_Info.roomIdx){//Exit Room
+		}else if(data.roomIdx == g_Info.roomIdx){//本房间有人退出
 			removeRoom(data.posIdx);
 		}
-	}).on("joinRoomError", function(data){//Enter Room Fail
+	}).on("joinRoomError", function(data){//加入房间失败
 		alert("Fail to Join Room");
-	}).on("message", function(data){//Accept Msg
+	}).on("message", function(data){//接受消息
 		if(data.type == MSG_ALL){
 			$("#msg-content").append("<p>" + data.nickname + ": " + data.body + "</p>");
 		}else if(data.type == MSG_TO){
@@ -132,9 +132,9 @@ $(function(){
 		}else if(data.type == MSG_ROOM){
 			$("#room-msg-content").append("<p>" + data.nickname + ": " + data.body + "</p>");
 		}
-	}).on("drawChess", function(data){//Drop Chess
-		var left = data.x * 35 + 5;
-		var top  = data.y * 35 + 5;
+	}).on("drawChess", function(data){//落子
+		var left = data.x * 35 + 6;
+		var top  = data.y * 35 + 6;
 		var css  = (data.color == COLOR_BLACK ? "black" : "white");
 		var html = '<div id="chess-' + data.x + '-' + data.y + '" style="left:' + left + 'px;top:' + top + 'px" class="' + css + '"></div>';
 		$("div.room_chess").append(html);
@@ -142,7 +142,7 @@ $(function(){
 			$("div.room_chess").append('<div class="cur"></div>');
 		}
 		$("div.room_chess .cur").css({
-			left : left,
+			left : left - 1,
 			top : top
 		});
 		if(data.id == g_Info.id){
@@ -152,29 +152,19 @@ $(function(){
 			g_Info.allowDraw = true;
 			$("div.room_chess").css("cursor", "pointer");
 		}	
-	}).on("winer", function(data){//Success
+	}).on("winer", function(data){//胜利
 		g_Info.status = STAT_NORMAL;
 		g_Info.allowDraw = false;
 		updateRoom(g_Info.posIdx, g_Info);
 		alert("You Win! Boiler Up!");
-	}).on("loser", function(data){//Fail
+	}).on("loser", function(data){//失败
 		g_Info.status = STAT_NORMAL;
 		g_Info.allowDraw = false;
 		updateRoom(g_Info.posIdx, g_Info);
-		alert("You Lost :( It's Okay, your life gets more diffcult");
+		alert("You Lost! KEEP IT UP...");
 	});
 	
-	//Render Login 
-	$("#dlgBg").css({
-		width : $(document).width(),
-		height : $(document).height()
-	});
-	$("#login").css({
-		left : ($(document).width() - $("#login").width()) / 2,
-		top : 100
-	});
-	
-	//Enter Username
+	//昵称输入框事件
 	$('#nickname').click(function(){
 		$(this).val('');
 	}).blur(function(){
@@ -183,15 +173,15 @@ $(function(){
 		}
 	}).val(defaultNickname);
 	
-	//Login
+	//登陆
 	$("#loginBtn").click(function(){
-		//Connect with Server
+		//链接服务器
 		if(app.connect() == false){
 			alert("error: " + app.getError());
 			return false;
 		}
 		
-		//Login with Username
+		//登陆
 		var nickname = $("#nickname").val();
 		if(!nickname || nickname == defaultNickname){
 			alert("Please Enter Your Name");
@@ -201,7 +191,7 @@ $(function(){
 		app.login(nickname);
 	});
 	
-	//Enter Room
+	//加入房间
 	$("#room-box .player").live("click", function(){
 		var roomIdx = $(this).closest('.room_item').attr('value');
 		var posIdx = $(this).attr('value');
@@ -217,7 +207,7 @@ $(function(){
 		app.joinRoom(roomIdx, posIdx);
 	});
 	
-	//Send Msg
+	//发送消息
 	$("#msg-button").click(function(){
 		var msg = $("#msg-input").val();
 		if(msg == ""){
@@ -227,7 +217,15 @@ $(function(){
 		$("#msg-input").val('');
 	});
 	
-	//Send Msg to Room
+	//发送消息到房间内
+	$("#msg").submit(function(){
+		var msg = $("#room-msg-input").val();
+		if(!msg){
+			return ;
+		}
+		app.sendRoomMsg(msg);
+		$("#room-msg-input").val("");
+	});
 	$("#room-msg-button").click(function(){
 		var msg = $("#room-msg-input").val();
 		if(!msg){
@@ -237,7 +235,7 @@ $(function(){
 		$("#room-msg-input").val("");
 	});
 	
-	//Change tag
+	//切换窗口
 	$("#tag a").click(function(){
 		var id = $(this).attr('href').substr(1);
 		if($(this).hasClass('on')){
@@ -253,7 +251,7 @@ $(function(){
 		return false;
 	});
 	
-	//Drop Chess
+	//落子
 	$("div.room_chess").click(function(ev){
 		var pageX = ev.pageX;
 		var pageY = ev.pageY;
@@ -269,7 +267,7 @@ $(function(){
 		app.drawChess(g_Info.color, x, y);
 	});
 	
-	//Ready
+	//准备
 	$("#game_ready").click(function(){
 		if(g_Info.status == STAT_START){
 			return;
@@ -277,7 +275,7 @@ $(function(){
 		app.ready();
 	});
 	
-	//Exit Room
+	//退出房间
 	$("#game_leave").click(function(){
 		if(g_Info.status == STAT_START){
 			alert("Don't escape from the game!");
@@ -286,7 +284,7 @@ $(function(){
 		app.leaveRoom(g_Info.roomIdx);
 	});
 	
-	//Change tag
+	//切换
 	function changeTag(tag)
 	{
 		if(tag == "room_list"){
@@ -302,15 +300,15 @@ $(function(){
 		}
 	}
 	
-	//Render User html
+	//生成用户html
 	function makeHtmlUserList(data)
 	{
-		var stat = (data.status == STAT_READY ? "Ready" : (data.status == STAT_START ? "Gaming" : "Waiting"));
+		var stat = (data.status == STAT_READY ? "READY" : (data.status == STAT_START ? "Gaming" : "Waiting"));
 		var html = ('<li id="user-' + data.id + '"><span>' + stat + "</span>" + data.nickname + "</li>");
 		return html;
 	}
 	
-	//Render User List
+	//初始化用户列表
 	function initUserList(data)
 	{
 		var html = '';
@@ -320,7 +318,7 @@ $(function(){
 		$("#list-box").html(html);	
 	}
 	
-	//Render Room list
+	//初始化房间列表
 	function initRoomList(data)
 	{
 		var html = '';
@@ -338,14 +336,14 @@ $(function(){
 		$("#room-box").html(html);	
 	}
 	
-	//Render Room
+	//初始化房间
 	function initRoom(player1, player2)
 	{
-		//Clera Msg & Chess
+		//清除消息和棋子
 		$("div.room_chess div").remove();
 		$("#room-msg-content p").remove();	
 		
-		//tag change
+		//tag样式切换
 		changeTag("room");
 		
 		//玩家1
@@ -355,7 +353,7 @@ $(function(){
 			removeRoom(0);
 		}
 		
-		//Plyaer2
+		//玩家2
 		if(player2){
 			updateRoom(1, player2);
 		}else{
@@ -363,26 +361,26 @@ $(function(){
 		}
 	}
 	
-	//Update Room Members
+	//更新房间人员
 	function updateRoom(posIdx, player)
 	{
 		var p = (posIdx == 0 ? 1 : 2);
-		var s = (player.status == STAT_NORMAL ? "NotReady" : (player.status == STAT_READY ? "Ready" : "Gaming"));
+		var s = (player.status == STAT_NORMAL ? "GET READY" : (player.status == STAT_READY ? "Ready" : "Gaming"));
 		$("#room-p" + p + "-nickname").html(player.nickname);
 		$("#room-p" + p + "-status").html(s);
-		$("#room-p" + p + "-img").html('<img src="yes_player.gif">');
+		$("#room-p" + p + "-img").html('<img src="farmer.png" style="width:133px;height:133px;">');
 		if(g_Info.id == player.id){
-			var b = (player.status == STAT_NORMAL ? "Ready" : (player.status == STAT_READY ? "Exit" : "Gaming..."));
+			var b = (player.status == STAT_NORMAL ? "Ready" : (player.status == STAT_READY ? "Cancel" : "Gaming..."));
 			$("#game_ready").val(b);
 		}
 	}
 	
-	//Move Member from room
+	//从本房间移除另一个成员
 	function removeRoom(posIdx)
 	{
 		var p = (posIdx == 0 ? 1 : 2);
 		$("#room-p" + p + "-nickname").html('&nbsp;');
 		$("#room-p" + p + "-status").html("&nbsp;");
-		$("#room-p" + p + "-img").html('<img src="no_player.gif">');	
+		$("#room-p" + p + "-img").html('<img src="waiting.png" style="width:133px;height:133px;">');	
 	}
 });
