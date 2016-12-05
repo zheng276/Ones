@@ -325,8 +325,8 @@
 		//ROW
 		n = 0;
 		var startX = (x - 4) < 0 ? 0 : x - 4;
-		//var endX   = (x + 4) > 14 ? 14 : x + 4;		
-		//for(var i = startX; i <= endX; i++){
+		var endX   = (x + 4) > 14 ? 14 : x + 4;		
+		for(var i = startX; i <= endX; i++){
 			if(m_RoomData[roomIdx][i][y] == cur){
 				n++;
 			}else{
@@ -336,7 +336,7 @@
 		}
 		
 		//COLUMN
-		//n = 0;
+		n = 0;
 		var startY = (y - 4) < 0 ? 0 : x - 4;
 		var endY   = (y + 4) > 14 ? 14 : y + 4;		
 		for(var i = startY; i <= endY; i++){
