@@ -17,9 +17,9 @@ An Online Multiplyaer Chess(Five Chess) Game which allows multiple users play in
 Using: HTML, Javascript, Node.js, Express and Socket.io
 
 Developer:
-Jing Zheng
-Yilang Fan
-Tiancheng Lu
+- Jing Zheng
+- Yilang Fan
+- Tiancheng Lu
 
 
 
