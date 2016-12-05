@@ -42,7 +42,7 @@ body{background:#AED9E0;margin-top:calc((100vh - 650px) / 2);}
 .room_user p{line-height:22px}
 .room_user .u1{margin-top:65px;}
 .room_user .u2{margin-top:40px}
-.room_chess{margin-top:5px;width:535px;height:535px;float:left;background:url('bg.jpg');position:relative;cursor:no-drop}
+.room_chess{margin-top:5px;width:535px;height:535px;float:left;background:url('bg.png');position:relative;cursor:no-drop}
 .room_chess .black{background:url('crown1.png') center center no-repeat;background-size:32px 32px;width:32px;height:32px;position:absolute;z-index:888}
 .room_chess .white{background:url('crown2.png') center center no-repeat;background-size:32px 32px;width:32px;height:32px;position:absolute;z-index:888}
 .room_chess .cur{background:url('cur.png') center center no-repeat;width:35px;height:33px;position:absolute;z-index:999}
