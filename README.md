@@ -7,10 +7,10 @@ An Online Multiplyaer Chess(Five Chess) Game which allows multiple users play in
  - Click any empty spot to join a room on 'Lobby'
  - Feel free to communicate/announce any friend to join with you at 'Lobby Chat Room'
  - Both players need to be 'READY' for the game to start
- - Top player on the left hand side start the game first
+ - Left side player(topside on the room) start the game first
  - Red cross on the chess indicate the most recent dropped chess
  - Each player gets one round to drop a chess on any position
- - Connect any five chess on column/row/diagonse direction will results the Winner.
+ - Connect any five chess on column/row/diagonose direction will results the Winner.
  - Users cannot exit the room during the game (but can still switch to 'Lobby' tag to check status of other rooms/players or having chat)
  - Chat box available for both 'Room' (private to players only)/'Lobby' (public to all the users)
  
