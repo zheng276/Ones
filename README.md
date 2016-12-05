@@ -1,4 +1,6 @@
-Trichess
+TriChess™
+
+Play TriChess™ with your friends at: trichess.mybluemix.net/play
 
 An Online Multiplyaer Chess(Five Chess) Game which allows multiple users play in multiple rooms. 
  - Enter user nickname to create a user
